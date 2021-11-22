@@ -5,6 +5,10 @@
 # 네임스페이스 생성 ( 생성은 안함, elasticsearch namespace 에 설치 )
 namespace:
   name: hibana
+  annotations: { }
+  labels: {
+    istio-injection: enabled
+  }
 
 # host 부분에 도메인으로 등록할 주소 입력
 istioGateway:
