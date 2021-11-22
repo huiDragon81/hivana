@@ -1,0 +1,93 @@
+###############################################################################
+#################################### commons #################################
+###############################################################################
+
+# 네임스페이스 생성 ( 생성은 안함, elasticsearch namespace 에 설치 )
+namespace:
+  name: hibana
+
+# host 부분에 도메인으로 등록할 주소 입력
+istioGateway:
+  servers:
+    hosts:
+      - "hibana.dev.sinsang.market"
+
+# 자동 도메인 등록 (현재는 sandbox에서만 테스트 예정)
+externalDns:
+  domainFilter: "dev.sinsang.market"
+
+imagePullSecrets: []
+nameOverride: ""
+# 서비스 이름 입력
+fullnameOverride: hibana-dev
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+# fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+# runAsUser: 1000
+
+# 서비스 포트 입력 (일반적으로 타겟포트도 동일하게 입력)
+service:
+  type: ClusterIP
+  port: 5601
+  targetPort: 5601
+  grpc:
+    enabled: false
+    port: 8888
+
+resources:
+  # 필요한 리소스를 requests에 명시하고 limits 는 requests와 같거나 크게 설정.
+  # limits가 너무 높으면 node에서 충분한 리소스를 사용하기도 전에 autoscaling을 시전하거나
+  # 노드 리소스가 실제로 넉넉해도 pod가 뜨지 않는 경우가 발생하므로 주의.
+  limits:
+    cpu: 2
+    memory: 2Gi
+  requests:
+    cpu: 2
+    memory: 2Gi
+
+# Spring 구동시까지 대략 4분이 소요되어 pod가 정상적으로 시작할때까지 기다림
+# 앱이 완전 실행되기 전에 initialDelaySeconds가 종료되면 에러 발생
+startupProbe:
+  initialDelaySeconds: 240
+  periodSeconds: 30
+
+# worker 노드에만 pod가 생성되도록 설정되어 있음
+nodeSelector:
+  role: worker
+
+tolerations: []
+
+affinity: {}
+
+# deployment가 제거되거나 pod template이 업데이트 되거나 pod가 삭제되는 경우에도
+# 최소 1개의 파드는 동작하도록 설정
+pdb:
+  maxUnavailable: null
+  minAvailable: 1
+
+
+###############################################################################
+############################### kibana values #################################
+###############################################################################
+
+cluster: helastic
+version: 7.15.2
+namespaceESRef: helastic
