@@ -1,0 +1,29 @@
+---
+########################################################
+# ingress
+########################################################
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hivana-ingress
+  namespace: hivana
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/load-balancer-name: hivana-ingress
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:964225094109:certificate/c145eb98-7d44-43a5-8cb9-ab12b43c2f72
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-2016-08
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80,"HTTPS": 443}]'
+spec:
+  rules:
+    - host: hivana.dev.sinsang.market
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hivana-kb-http
+                port:
+                  number: 5601

@@ -6,6 +6,10 @@ metadata:
 spec:
   version: {{ .Values.version }}
   count: 1
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   elasticsearchRef:
-    name: {{ .Values.cluster }}
+    name: {{ .Values.esRef }}
     namespace: {{ .Values.namespaceESRef }}
