@@ -12,4 +12,5 @@ spec:
         disabled: true
   elasticsearchRef:
     name: {{ .Values.esRef }}
-    namespace: {{ .Values.namespaceESRef }}
+    serviceName: {{ .Values.esServiceRef }}
+    namespace: {{ .Values.esNamespaceRef }}
